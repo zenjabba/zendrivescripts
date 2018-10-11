@@ -1,0 +1,57 @@
+#!/bin/bash
+
+RCLONE_CONFIG="/root/.config/rclone/rclone.conf"
+WEBHOOK="https://rocketchat.digitalmonks.org/hooks/DaqmtfW3sZoh6RQ5v/XY4v3SmqurS2iCQwk83vMbNQGxuxH5TisLdYv8qey5DEHmMX"
+CHANNEL="notifications-mover"
+TRANSFERS=20
+CHECKERS=60
+DRIVE_CHUNK_SIZE="64M --fast-list"
+
+rocketpush () {
+
+/opt/scripts/rocketpush.sh $WEBHOOK $CHANNEL "$1"
+
+}
+
+rclonededupe () {
+
+/usr/bin/rclone dedupe --config=$RCLONE_CONFIG $1
+
+}
+
+rclonecopy () {
+
+/usr/bin/rclone sync --config=$RCLONE_CONFIG $1 $2 --transfers=$TRANSFERS --checkers=$CHECKERS --drive-chunk-size=$DRIVE_CHUNK_SIZE
+
+}
+
+rclonemain () {
+
+rocketpush "Starting $1 dedupe"
+                rclonededupe "$1"
+        rocketpush "Starting $2 dedupe"
+                rclonededupe "$2"
+        rocketpush "Starting copy from $1 to $2"
+
+        rclonecopy "$1" "$2"
+
+        if [ $? -eq 0 ]
+        then
+                rocketpush "copy from $1 to $2 completed"
+        else
+                rocketpush "copy from $1 to $2 failed"
+        fi
+
+}
+
+rclonemain "source_team_anime:/" "source:/source/anime"
+
+rclonemain "source_team_film:/"  "source:/source/film"
+
+rclonemain "source_team_adult:/" "source:/source/adult"
+
+rclonemain "source_team_4kmovies:/" "source:/source/4k-movies"
+
+rclone main "source_team_tv:/" "source:/source/tv"
+
+shutdown -h now
