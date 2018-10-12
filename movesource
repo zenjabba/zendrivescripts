@@ -1,22 +1,60 @@
 #!/bin/bash
+#
+# See sample file in git and place completed file in ~/movescripts.env
+# command options $1 is location of files to process
+# movesource collectionofremotes.txt
+#
+#
+# Comment this out when ready to run
+DEBUG=true
+#
+#
+
+if [ "$#" -ne 1 ]; then
+    echo ""
+    echo ""
+    echo "$0 collectionofremotes.txt"
+    echo ""
+    echo ""
+    echo "This script requires a pointer to the list of rclone remotes you wish to use in a text file"
+    echo "IE."
+    echo ""
+    echo "source_rclone_mount:/ destination_rclone_mount:/"
+    echo ""
+    exit 1
+fi
+
+PROCESS_FILE=$1
 
 export $(xargs < ~/movescripts.env)
 
 rocketpush () {
 
-/opt/scripts/rocketpush.sh $WEBHOOK $CHANNEL "$1"
+if [ "$DEBUG"="true" ]; then
+        echo "/opt/scripts/rocketpush.sh $WEBHOOK $CHANNEL $1"
+    else
+	/opt/scripts/rocketpush.sh $WEBHOOK $CHANNEL "$1"
+fi
 
 }
 
 rclonededupe () {
 
-/usr/bin/rclone dedupe --config=$RCLONE_CONFIG $1
+if [ "$DEBUG"="true" ]; then
+	echo "/usr/bin/rclone dedupe --config=$RCLONE_CONFIG $1"
+    else
+	/usr/bin/rclone dedupe --config=$RCLONE_CONFIG $1
+fi
 
 }
 
 rclonecopy () {
 
-/usr/bin/rclone sync --config=$RCLONE_CONFIG $1 $2 --transfers=$TRANSFERS --checkers=$CHECKERS --drive-chunk-size=$DRIVE_CHUNK_SIZE  --fast-list
+if [ "$DEBUG"="true" ]; then
+	echo "/usr/bin/rclone sync --config=$RCLONE_CONFIG $1 $2 --transfers=$TRANSFERS --checkers=$CHECKERS --drive-chunk-size=$DRIVE_CHUNK_SIZE  --fast-list"
+    else
+	/usr/bin/rclone sync --config=$RCLONE_CONFIG $1 $2 --transfers=$TRANSFERS --checkers=$CHECKERS --drive-chunk-size=$DRIVE_CHUNK_SIZE  --fast-list
+fi
 
 }
 
@@ -30,8 +68,7 @@ rocketpush "Starting $1 dedupe"
 
         rclonecopy "$1" "$2"
 
-        if [ $? -eq 0 ]
-        then
+        if [ $? -eq 0 ]; then
                 rocketpush "copy from $1 to $2 completed"
         else
                 rocketpush "copy from $1 to $2 failed"
@@ -39,14 +76,21 @@ rocketpush "Starting $1 dedupe"
 
 }
 
-rclonemain "source_team_anime:/" "source:/source/anime"
 
-rclonemain "source_team_film:/"  "source:/source/film"
+shutdown () {
+if [ "$DEBUG"="true" ]; then
+	echo "shutdown -h now"
+    else
+	rocketpush "Shutting down system"
+	sleep 15
+	/sbin/shutdown -h now
+fi
 
-rclonemain "source_team_adult:/" "source:/source/adult"
+}
 
-rclonemain "source_team_4kmovies:/" "source:/source/4k-movies"
+while IFS=" " read -r source destination
+	do
+	    rclonemain $source $destination
+	done < $PROCESS_FILE
 
-rclonemain "source_team_tv:/" "source:/source/tv"
-
-shutdown -h now
+shutdown
