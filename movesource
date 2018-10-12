@@ -52,6 +52,6 @@ rclonemain "source_team_adult:/" "source:/source/adult"
 
 rclonemain "source_team_4kmovies:/" "source:/source/4k-movies"
 
-rclone main "source_team_tv:/" "source:/source/tv"
+rclonemain "source_team_tv:/" "source:/source/tv"
 
 shutdown -h now
