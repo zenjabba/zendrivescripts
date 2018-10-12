@@ -33,7 +33,7 @@ rocketpush () {
 if [ "$DEBUG"="true" ]; then
         echo "/opt/scripts/rocketpush.sh $WEBHOOK $CHANNEL $1"
     else
-	/opt/scripts/rocketpush.sh $WEBHOOK $CHANNEL "$1"
+	/opt/scripts/rocketpush.sh $WEBHOOK $CHANNEL "$PROJECTNAME $1"
 fi
 
 }
