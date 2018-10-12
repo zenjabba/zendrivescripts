@@ -1,2 +1,2 @@
-"source_rclone_mount:/ destination_rclone_mount:/"
-"source_rclone_mount_next:/ destination_rclone_mount_next:/"
+source_rclone_mount:/ destination_rclone_mount:/
+source_rclone_mount_next:/ destination_rclone_mount_next:/
