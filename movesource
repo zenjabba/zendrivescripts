@@ -6,7 +6,6 @@
 #
 #
 # Comment this out when ready to run
-DEBUG=true
 #
 #
 
@@ -26,7 +25,7 @@ fi
 
 PROCESS_FILE=$1
 
-export $(xargs < ~/movescripts.env)
+export $(xargs < /root/movescript.env)
 
 rocketpush () {
 
