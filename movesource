@@ -1,7 +1,7 @@
 #!/bin/bash
 
 RCLONE_CONFIG="/root/.config/rclone/rclone.conf"
-WEBHOOK="https://rocketchat.digitalmonks.org/hooks/DaqmtfW3sZoh6RQ5v/XY4v3SmqurS2iCQwk83vMbNQGxuxH5TisLdYv8qey5DEHmMX"
+WEBHOOK="https://rocketchat.zenjabba.com/hooks/DaqmtfW3sZoh6RQ5v/XY4v3SmqurS2iCQwk83vMbNQGxuxH5TisLdYv8qey5DEHmMX"
 CHANNEL="notifications-mover"
 TRANSFERS=20
 CHECKERS=60
