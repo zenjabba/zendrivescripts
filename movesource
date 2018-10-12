@@ -16,7 +16,7 @@ rclonededupe () {
 
 rclonecopy () {
 
-/usr/bin/rclone sync --config=$RCLONE_CONFIG $1 $2 --transfers=$TRANSFERS --checkers=$CHECKERS --drive-chunk-size=$DRIVE_CHUNK_SIZE
+/usr/bin/rclone sync --config=$RCLONE_CONFIG $1 $2 --transfers=$TRANSFERS --checkers=$CHECKERS --drive-chunk-size=$DRIVE_CHUNK_SIZE  --fast-list
 
 }
 
