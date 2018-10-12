@@ -30,7 +30,7 @@ export $(xargs < ~/movescripts.env)
 
 rocketpush () {
 
-if [ "$DEBUG"="true" ]; then
+if [ "$DEBUG" = "true" ]; then
         echo "/opt/scripts/rocketpush.sh $WEBHOOK $CHANNEL $1"
     else
 	/opt/scripts/rocketpush.sh $WEBHOOK $CHANNEL "$PROJECTNAME $1"
@@ -40,7 +40,7 @@ fi
 
 rclonededupe () {
 
-if [ "$DEBUG"="true" ]; then
+if [ "$DEBUG" = "true" ]; then
 	echo "/usr/bin/rclone dedupe --config=$RCLONE_CONFIG $1"
     else
 	/usr/bin/rclone dedupe --config=$RCLONE_CONFIG $1
@@ -50,7 +50,7 @@ fi
 
 rclonecopy () {
 
-if [ "$DEBUG"="true" ]; then
+if [ "$DEBUG" = "true" ]; then
 	echo "/usr/bin/rclone sync --config=$RCLONE_CONFIG $1 $2 --transfers=$TRANSFERS --checkers=$CHECKERS --drive-chunk-size=$DRIVE_CHUNK_SIZE  --fast-list"
     else
 	/usr/bin/rclone sync --config=$RCLONE_CONFIG $1 $2 --transfers=$TRANSFERS --checkers=$CHECKERS --drive-chunk-size=$DRIVE_CHUNK_SIZE  --fast-list
@@ -78,7 +78,7 @@ rocketpush "Starting $1 dedupe"
 
 
 shutdown () {
-if [ "$DEBUG"="true" ]; then
+if [ "$DEBUG" = "true" ]; then
 	echo "shutdown -h now"
     else
 	rocketpush "Shutting down system"
