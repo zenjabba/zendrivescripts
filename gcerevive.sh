@@ -4,20 +4,13 @@
 # Initial version from RXWatcher
 # $1 PROJECTID, $2 ZONE, $3 INSTANCE, $4 LOGFILE
 
-LOGFILE=$4
 PROJECTID=$1
 ZONE=$2
 INSTANCE=$3
-
-check_running () {
-
-if pidof -o %PPID -x "gce.sh"; then
-exit 1
-fi
-
-}
+LOGFILE="/var/log/gcerevive/$PROJECTID-$INSTANCE"
 
 check_status () {
+
 echo "$(date "+%d.%m.%Y %T") Checking $INSTANCE Status.."
 PRESTATUS=$(/usr/bin/gcloud compute instances describe $INSTANCE --project=$PROJECTID --zone=$ZONE | grep  "status")
 STATUS=${PRESTATUS:7}
@@ -32,9 +25,19 @@ if [ $STATUS = "TERMINATED" ]; then
         /usr/bin/gcloud compute instances start $INSTANCE --project=$PROJECTID --zone=$ZONE
         echo "$(date "+%d.%m.%Y %T") $INSTANCE started." | tee -a $LOGFILE
 fi
+
 }
 
-# check_running
+
+check_if_logdir_exists () {
+
+if [ ! -d "/var/log/gcerevive/" ]; then
+  mkdir -p /var/log/gcerevive/
+fi
+
+}
+
+check_if_logdir_exists
 check_status
 
 exit
